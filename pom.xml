@@ -115,4 +115,10 @@
     </plugins>
   </build>
 
+  <distributionManagement>
+    <repository>
+      <id>internal</id>
+      <url>file://mvn-repo</url>
+    </repository>
+  </distributionManagement>
 </project>
