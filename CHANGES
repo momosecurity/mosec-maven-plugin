@@ -1,0 +1,34 @@
+Changelog
+
+=========
+
+Version 1.0.6
+
+- feature  change simple-json to gson
+- feature  default not include provided scope dependencies
+
+Version 1.0.5
+
+- feature  default BUILD FAIL when found vulnerable
+
+Version 1.0.4
+
+- feature  BUILD FAIL when found vulnerable && parameter support
+- remove   endpoint and includeProvidedDependencies parameters
+
+Version 1.0.3
+
+- feature  throw MojoFailureException when Dependency Collection Error
+
+Version 1.0.2
+
+- feature  warning detail add title and cve
+
+Version 1.0.1
+
+- feature  add onlyProvenance parameter
+- feature  add http timeout
+
+Version 1.0.0
+
+- Init

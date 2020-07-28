@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.immomo.momosec</groupId>
+  <artifactId>MyTestProject</artifactId>
+  <version>1.0.0</version>
+
+  <name>Mosec Maven Plugin Test Project</name>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.33</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.immomo.momosec</groupId>
+        <artifactId>mosec-maven-plugin</artifactId>
+        <configuration>
+          <!-- The defined stubs -->
+          <project implementation="com.immomo.momosec.maven.plugins.stubs.MyTestProjectStub"/>
+          <settings implementation="com.immomo.momosec.maven.plugins.stubs.MyTestProjectSettingsStub"/>
+          <repositorySystemSession implementation="com.immomo.momosec.maven.plugins.stubs.MyTestProjectSystemSessionStub" />
+          <!-- The defined stubs end -->
+          <remoteProjectRepositories></remoteProjectRepositories>
+          <remotePluginRepositories></remotePluginRepositories>
+
+          <severityLevel>High</severityLevel>
+          <failOnVuln>False</failOnVuln>
+          <onlyProvenance>true</onlyProvenance>
+          <endpoint>https://fake.endpoint.com/</endpoint>
+          <includeProvidedDependency>false</includeProvidedDependency>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
