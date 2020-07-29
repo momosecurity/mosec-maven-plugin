@@ -10,12 +10,16 @@ Maven >= 3.1
 
 ## 安装
 
-#### 从github安装至本地仓库
+#### 向pom.xml中添加plugin仓库
 
-```shell script
-> mvn dependency:get \
-  -Dartifact=com.immomo.momosec:mosec-maven-plugin:1.6 \
-  -DremoteRepositories=gh::::https://raw.github.com/momosecurity/mosec-maven-plugin/master/mvn-repo/
+```xml
+<!-- pom.xml -->
+<pluginRepositories>
+  <pluginRepository>
+      <id>gh</id>
+      <url>https://raw.github.com/momosecurity/mosec-maven-plugin/master/mvn-repo/</url>
+  </pluginRepository>
+</pluginRepositories>
 ```
 
 ## 使用
@@ -26,7 +30,7 @@ Maven >= 3.1
 ```
 > cd your_maven_project_dir/
 > MOSEC_ENDPOINT=http://127.0.0.1:9000/api/plugin \
-  mvn com.immomo.momosec:mosec-maven-plugin:1.6:test \
+  mvn com.immomo.momosec:mosec-maven-plugin:1.0.6:test \
   -DonlyProvenance=true
 
 # .m2/settings.xml 中增加如下配置，可简化使用命令
