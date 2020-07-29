@@ -41,13 +41,11 @@ Maven >= 3.1
   mvn com.immomo.momosec:mosec-maven-plugin:1.0.6:test \
   -DonlyProvenance=true
 
-# .m2/settings.xml 中增加如下配置，可简化使用命令
+# ~/.m2/settings.xml 中增加如下配置，可简化使用命令
 --------------------------------
-    <!-- .m2/settings.xml -->
-
-    <pluginGroups>
-        <pluginGroup>com.immomo.momosec</pluginGroup>
-    </pluginGroups>
+  <pluginGroups>
+      <pluginGroup>com.immomo.momosec</pluginGroup>
+  </pluginGroups>
 --------------------------------
 > MOSEC_ENDPOINT=http://127.0.0.1:9000/api/plugin \
   mvn mosec:test -DonlyProvenance=true
@@ -85,11 +83,11 @@ Maven >= 3.1
 
 #### Intellij 远程调试 Maven 插件
 
-1.将mosec-maven-plugin安装至本地仓库
+1.将mosec-maven-plugin拉取至本地仓库
 
-2.git clone mosec-maven-plugin
+2.git clone mosec-maven-plugin 源码
 
-3.Intellij 中新建 Remote Configuration 并填入如下信息
+3.Intellij 打开mosec-maven-plugin项目，新建 Remote Configuration 并填入如下信息
 
 ![remote-configuration](https://github.com/momosecurity/mosec-maven-plugin/blob/master/static/remote-configuration.jpg)
 
