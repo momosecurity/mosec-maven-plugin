@@ -154,7 +154,7 @@ mosec:test
 
 程序返回值为1，表示发现漏洞。返回值为0，即为未发现问题。
 
-![usage](https://github.com/momosecurity/mosec-maven-plugin/blob/master/static/usage.jpg)
+![usage](./static/usage.jpg)
 
 
 
@@ -180,7 +180,7 @@ MOSEC-MAVEN-PLUGIN使用`org.apache.maven:maven-core`组件中提供的`aether-a
 
 3.Intellij 打开mosec-maven-plugin项目，新建 Remote Configuration 并填入如下信息
 
-![remote-configuration](https://github.com/momosecurity/mosec-maven-plugin/blob/master/static/remote-configuration.jpg)
+![remote-configuration](./static/remote-configuration.jpg)
 
 4.在另一个maven工程中执行如下命令
 
