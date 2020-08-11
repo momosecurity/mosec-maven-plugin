@@ -4,6 +4,8 @@
 
 该项目是基于 [snyk-maven-plugin](https://github.com/snyk/snyk-maven-plugin.git) 的二次开发。
 
+
+
 ## 关于我们
 
 Website：https://security.immomo.com
@@ -12,9 +14,13 @@ WeChat:
 
 <img src="https://momo-mmsrc.oss-cn-hangzhou.aliyuncs.com/img-1c96a083-7392-3b72-8aec-bad201a6abab.jpeg" width="200" hegiht="200" align="center" /><br>
 
+
+
 ## 版本要求
 
 Maven >= 3.1
+
+
 
 ## 安装
 
@@ -57,6 +63,8 @@ Maven >= 3.1
     <activeProfile>momo-plugin</activeProfile>
 </activeProfiles>
 ```
+
+
 
 ## 使用
 
@@ -104,6 +112,8 @@ Maven >= 3.1
 </plugins>
 ```
 
+
+
 ## 帮助
 
 ```shell script
@@ -134,6 +144,8 @@ mosec:test
       User property: severity
 ```
 
+
+
 ## 使用效果
 
 以 src/test/resources/projects/vuln-project 项目为例。
@@ -144,6 +156,8 @@ mosec:test
 
 ![usage](https://github.com/momosecurity/mosec-maven-plugin/blob/master/static/usage.jpg)
 
+
+
 ## 检测原理
 
 MOSEC-MAVEN-PLUGIN使用`org.apache.maven:maven-core`组件中提供的`aether-api`提取依赖并构建依赖树。
@@ -153,6 +167,8 @@ MOSEC-MAVEN-PLUGIN使用`org.apache.maven:maven-core`组件中提供的`aether-a
 最终依赖树会交由 [MOSEC-X-PLUGIN-BACKEND](https://github.com/momosecurity/mosec-x-plugin-backend.git) 检测服务进行检测，并返回结果。
 
 相关数据结构请参考 MOSEC-X-PLUGIN-BACKEND [README.md](https://github.com/momosecurity/mosec-x-plugin-backend/blob/master/README.md).
+
+
 
 ## 开发
 
