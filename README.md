@@ -18,16 +18,44 @@ Maven >= 3.1
 
 ## 安装
 
-#### 向pom.xml中添加plugin仓库
+#### 向pom.xml中添加plugin仓库 (项目级安装)
 
 ```xml
 <!-- pom.xml -->
+
 <pluginRepositories>
   <pluginRepository>
       <id>gh</id>
       <url>https://raw.github.com/momosecurity/mosec-maven-plugin/master/mvn-repo/</url>
   </pluginRepository>
 </pluginRepositories>
+```
+
+#### 向maven配置中添加plugin仓库 (全局安装)
+
+```xml
+<!-- settings.xml -->
+
+<!-- 添加pluginGroup可简化命令行参数 -->
+<pluginGroups>
+    <pluginGroup>com.immomo.momosec</pluginGroup>
+</pluginGroups>
+
+<profiles>
+    <profile>
+      <id>momo-plugin</id>
+      <pluginRepositories>
+        <pluginRepository>
+            <id>gh</id>
+            <url>https://raw.github.com/momosecurity/mosec-maven-plugin/master/mvn-repo/</url>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+</profiles>
+
+<activeProfiles>
+    <activeProfile>momo-plugin</activeProfile>
+</activeProfiles>
 ```
 
 ## 使用
@@ -37,16 +65,13 @@ Maven >= 3.1
 #### 命令行使用
 ```
 > cd your_maven_project_dir/
+
 > MOSEC_ENDPOINT=http://127.0.0.1:9000/api/plugin \
   mvn com.immomo.momosec:mosec-maven-plugin:1.0.6:test \
   -DonlyProvenance=true
 
-# ~/.m2/settings.xml 中增加如下配置，可简化使用命令
---------------------------------
-  <pluginGroups>
-      <pluginGroup>com.immomo.momosec</pluginGroup>
-  </pluginGroups>
---------------------------------
+// 或简化方式
+
 > MOSEC_ENDPOINT=http://127.0.0.1:9000/api/plugin \
   mvn mosec:test -DonlyProvenance=true
 ```
@@ -65,7 +90,7 @@ Maven >= 3.1
             <execution>
                 <id>test</id>
                 <goals>
-                    <goal>test</goal>
+                    <goal>test</goal>  <!-- test过程执行 -->
                 </goals>
             </execution>
         </executions>
@@ -78,6 +103,56 @@ Maven >= 3.1
     </plugin>
 </plugins>
 ```
+
+## 帮助
+
+```shell script
+> mvn mosec:help -Ddetail=true
+
+mosec:test
+
+  Available parameters:
+
+    endpoint
+      上报API
+      User property: endpoint
+
+    failOnVuln (Default: true)
+      发现漏洞即编译失败
+      User property: failOnVuln
+
+    includeProvidedDependency (Default: false)
+      是否包含Provided Scope依赖
+      User property: includeProvidedDependency
+
+    onlyProvenance (Default: false)
+      仅检查直接依赖
+      User property: onlyProvenance
+
+    severityLevel (Default: High)
+      威胁等级 [High|Medium|Low]
+      User property: severity
+```
+
+## 使用效果
+
+以 src/test/resources/projects/vuln-project 项目为例。
+
+[WARNING] 部分给出漏洞警告，Path: 为漏洞依赖链，Fix version 为组件安全版本。
+
+程序返回值为1，表示发现漏洞。返回值为0，即为未发现问题。
+
+![usage](https://github.com/momosecurity/mosec-maven-plugin/blob/master/static/usage.jpg)
+
+## 检测原理
+
+MOSEC-MAVEN-PLUGIN使用`org.apache.maven:maven-core`组件中提供的`aether-api`提取依赖并构建依赖树。
+
+该方法可以准确提取maven项目所使用的依赖，以及确定的依赖版本。
+
+最终依赖树会交由 [MOSEC-X-PLUGIN-BACKEND](https://github.com/momosecurity/mosec-x-plugin-backend.git) 检测服务进行检测，并返回结果。
+
+相关数据结构请参考 MOSEC-X-PLUGIN-BACKEND [README.md](https://github.com/momosecurity/mosec-x-plugin-backend/blob/master/README.md).
 
 ## 开发
 
