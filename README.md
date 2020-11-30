@@ -75,7 +75,7 @@ Maven >= 3.1
 > cd your_maven_project_dir/
 
 > MOSEC_ENDPOINT=http://127.0.0.1:9000/api/plugin \
-  mvn com.immomo.momosec:mosec-maven-plugin:1.0.6:test \
+  mvn com.immomo.momosec:mosec-maven-plugin:1.0.7:test \
   -DonlyProvenance=true
 
 // 或简化方式
@@ -93,7 +93,7 @@ Maven >= 3.1
     <plugin>
         <groupId>com.immomo.momosec</groupId>
         <artifactId>mosec-maven-plugin</artifactId>
-        <version>1.0.6</version>
+        <version>1.0.7</version>
         <executions>
             <execution>
                 <id>test</id>
@@ -135,9 +135,17 @@ mosec:test
       是否包含Provided Scope依赖
       User property: includeProvidedDependency
 
+    onlyAnalyze (Default: false)
+      仅分析依赖，不上报
+      User property: onlyAnalyze
+
     onlyProvenance (Default: false)
       仅检查直接依赖
       User property: onlyProvenance
+
+    outputDepToFile (Default: )
+      输出依赖树到文件
+      User property: outputDepToFile
 
     severityLevel (Default: High)
       威胁等级 [High|Medium|Low]
@@ -185,7 +193,7 @@ MOSEC-MAVEN-PLUGIN使用`org.apache.maven:maven-core`组件中提供的`aether-a
 4.在另一个maven工程中执行如下命令
 
 ```shell script
-> mvnDebug com.immomo.momosec:mosec-maven-plugin:1.0.6:test
+> mvnDebug com.immomo.momosec:mosec-maven-plugin:1.0.7:test
 ```
 
 5.回到Intellij中，下断点，开始Debug

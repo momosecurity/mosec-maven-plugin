@@ -37,6 +37,8 @@ import org.eclipse.aether.repository.RemoteRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.immomo.momosec.maven.plugins.Renderer.writeToFile;
+
 @Mojo(name = "test")
 public class MosecTest extends AbstractMojo {
 
@@ -88,6 +90,18 @@ public class MosecTest extends AbstractMojo {
     @Parameter(property = "includeProvidedDependency", defaultValue = "false")
     private Boolean includeProvidedDependency;
 
+    /**
+     * 输出依赖树到文件
+     */
+    @Parameter(property = "outputDepToFile", defaultValue = "")
+    private String outputDepToFile;
+
+    /**
+     * 仅分析依赖，不上报
+     */
+    @Parameter(property = "onlyAnalyze", defaultValue = "false")
+    private Boolean onlyAnalyze;
+
     public void execute() throws MojoFailureException {
         String env_endpoint = System.getenv(Constants.MOSEC_ENDPOINT_ENV);
         if (env_endpoint != null) {
@@ -130,7 +144,16 @@ public class MosecTest extends AbstractMojo {
             projectTree.addProperty("type", Constants.BUILD_TOOL_TYPE);
             projectTree.addProperty("language", Constants.PROJECT_LANGUAGE);
             projectTree.addProperty("severityLevel", severityLevel);
-            getLog().debug(new GsonBuilder().setPrettyPrinting().create().toJson(projectTree));
+            String jsonDepTree = new GsonBuilder().setPrettyPrinting().create().toJson(projectTree);
+            getLog().debug(jsonDepTree);
+            if (!"".equals(outputDepToFile)) {
+                writeToFile(outputDepToFile, jsonDepTree);
+            }
+
+            if (Boolean.TRUE.equals(onlyAnalyze)) {
+                getLog().info("onlyAnalyze mode, Done.");
+                return;
+            }
 
             HttpPost request = new HttpPost(endpoint);
             request.addHeader("content-type", Constants.CONTENT_TYPE_JSON);

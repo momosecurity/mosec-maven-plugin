@@ -20,9 +20,7 @@ import com.immomo.momosec.maven.plugins.exceptions.FoundVulnerableException;
 import com.immomo.momosec.maven.plugins.exceptions.NetworkErrorException;
 import org.apache.maven.plugin.logging.Log;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class Renderer {
 
@@ -89,5 +87,17 @@ public class Renderer {
 
     private Log getLog() {
         return log;
+    }
+
+    public static void writeToFile(String filename, String jsonTree) throws IOException {
+        File file = new File(filename);
+        if (!file.exists()) {
+            File dir = new File(file.getAbsoluteFile().getParent());
+            dir.mkdirs();
+            file.createNewFile();
+        }
+        FileOutputStream outputStream = new FileOutputStream(file);
+        outputStream.write(jsonTree.getBytes());
+        outputStream.close();
     }
 }
