@@ -32,7 +32,7 @@ Maven >= 3.1
 <pluginRepositories>
   <pluginRepository>
       <id>gh</id>
-      <url>https://raw.github.com/momosecurity/mosec-maven-plugin/master/mvn-repo/</url>
+      <url>https://raw.githubusercontent.com/momosecurity/mosec-maven-plugin/master/mvn-repo/</url>
   </pluginRepository>
 </pluginRepositories>
 ```
@@ -53,7 +53,7 @@ Maven >= 3.1
       <pluginRepositories>
         <pluginRepository>
             <id>gh</id>
-            <url>https://raw.github.com/momosecurity/mosec-maven-plugin/master/mvn-repo/</url>
+            <url>https://raw.githubusercontent.com/momosecurity/mosec-maven-plugin/master/mvn-repo/</url>
         </pluginRepository>
       </pluginRepositories>
     </profile>
