@@ -146,7 +146,7 @@ public class MosecTest extends AbstractMojo {
             projectTree.addProperty("severityLevel", severityLevel);
             String jsonDepTree = new GsonBuilder().setPrettyPrinting().create().toJson(projectTree);
             getLog().debug(jsonDepTree);
-            if (!"".equals(outputDepToFile)) {
+            if (outputDepToFile!=null) {
                 writeToFile(outputDepToFile, jsonDepTree);
             }
 
