@@ -34,6 +34,8 @@ import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.collection.DependencyCollectionException;
 import org.eclipse.aether.repository.RemoteRepository;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,7 +99,7 @@ public class MosecTest extends AbstractMojo {
     private String outputDepToFile;
 
     /**
-     * 仅分析依赖，不上报
+     * 仅分析依赖，不进行漏洞检查
      */
     @Parameter(property = "onlyAnalyze", defaultValue = "false")
     private Boolean onlyAnalyze;
@@ -146,11 +148,11 @@ public class MosecTest extends AbstractMojo {
             projectTree.addProperty("severityLevel", severityLevel);
             String jsonDepTree = new GsonBuilder().setPrettyPrinting().create().toJson(projectTree);
             getLog().debug(jsonDepTree);
-            if (outputDepToFile != null && !"".equals(outputDepToFile)) {
-                writeToFile(outputDepToFile, jsonDepTree);
-            }
 
             if (Boolean.TRUE.equals(onlyAnalyze)) {
+                if (!"".equals(outputDepToFile) && outputDepToFile != null) {
+                    writeToFile(outputDepToFile, jsonDepTree);
+                }
                 getLog().info("onlyAnalyze mode, Done.");
                 return;
             }
@@ -168,8 +170,18 @@ public class MosecTest extends AbstractMojo {
                 throw new NetworkErrorException(response.getStatusLine().getReasonPhrase());
             }
 
+            JsonParser parser = new JsonParser();
+            JsonObject responseJson;
+            try {
+                responseJson = parser.parse(new BufferedReader(new InputStreamReader(response.getEntity().getContent()))).getAsJsonObject();
+            } catch (JsonParseException | IllegalStateException e) {
+                throw new NetworkErrorException(Constants.ERROR_ON_API);
+            }
+            if (!"".equals(outputDepToFile) && outputDepToFile != null) {
+                writeToFile(outputDepToFile, jsonDepTree, responseJson);
+            }
             Renderer renderer = new Renderer(getLog(), failOnVuln);
-            renderer.renderResponse(response.getEntity().getContent());
+            renderer.renderResponse(responseJson);
 
         } catch (DependencyCollectionException e) {
             throw new MojoFailureException(e.getMessage());
