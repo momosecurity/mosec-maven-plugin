@@ -5,6 +5,7 @@ Changelog
 Version 1.0.8
 
 - feature  dump dependencies tree to file include / exclude scan result
+- upgrade  upgrade org.apache.httpcomponents:httpclient to 4.5.13
 
 Version 1.0.7
 
