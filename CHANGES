@@ -2,9 +2,15 @@ Changelog
 
 =========
 
-version 1.0.7
+Version 1.0.8
 
-- feature modify outputDepToFile
+- feature  dump dependencies tree to file include / exclude scan result
+
+Version 1.0.7
+
+- bugfix   NPE on outputDepToFile
+- feature  only analyze mode
+- feature  dump dependencies tree to file
 
 Version 1.0.6
 
