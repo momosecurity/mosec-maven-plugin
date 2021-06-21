@@ -34,15 +34,7 @@ public class Renderer {
         this.failOnVuln = failOnVuln;
     }
 
-    public void renderResponse(InputStream in) throws NetworkErrorException, FoundVulnerableException {
-        JsonParser parser = new JsonParser();
-        JsonObject responseJson;
-        try {
-            responseJson = parser.parse(new BufferedReader(new InputStreamReader(in))).getAsJsonObject();
-        } catch (JsonParseException | IllegalStateException e) {
-            throw new NetworkErrorException(Constants.ERROR_ON_API);
-        }
-
+    public void renderResponse(JsonObject responseJson) throws NetworkErrorException, FoundVulnerableException {
         if(responseJson.get("ok") != null && responseJson.get("ok").getAsBoolean()) {
             String ok = "✓ Tested %s dependencies, no vulnerable found.";
             getLog().info(logHelper.strongInfo(String.format(ok, responseJson.get("dependencyCount").getAsString())));
@@ -98,6 +90,24 @@ public class Renderer {
         }
         FileOutputStream outputStream = new FileOutputStream(file);
         outputStream.write(jsonTree.getBytes());
+        outputStream.close();
+    }
+
+    public static void writeToFile(String filename, String jsonTree, JsonObject responseJson) throws IOException, NetworkErrorException {
+        File file = new File(filename);
+        JsonParser parser = new JsonParser();
+        JsonObject result = parser.parse(jsonTree).getAsJsonObject();
+        result.add("ok", responseJson.get("ok"));
+        result.add("dependencyCount", responseJson.get("dependencyCount"));
+        result.add("vulnerabilities", responseJson.get("vulnerabilities"));
+        if (!file.exists()) {
+            File dir = new File(file.getAbsoluteFile().getParent());
+            dir.mkdirs();
+            file.createNewFile();
+        }
+        String jsonResult = new GsonBuilder().setPrettyPrinting().create().toJson(result);
+        FileOutputStream outputStream = new FileOutputStream(file);
+        outputStream.write(jsonResult.getBytes());
         outputStream.close();
     }
 }
