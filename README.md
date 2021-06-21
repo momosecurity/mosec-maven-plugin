@@ -93,7 +93,7 @@ Maven >= 3.1
     <plugin>
         <groupId>com.immomo.momosec</groupId>
         <artifactId>mosec-maven-plugin</artifactId>
-        <version>1.0.7</version>
+        <version>1.0.8</version>
         <executions>
             <execution>
                 <id>test</id>
@@ -193,7 +193,7 @@ MOSEC-MAVEN-PLUGIN使用`org.apache.maven:maven-core`组件中提供的`aether-a
 4.在另一个maven工程中执行如下命令
 
 ```shell script
-> mvnDebug com.immomo.momosec:mosec-maven-plugin:1.0.7:test
+> mvnDebug com.immomo.momosec:mosec-maven-plugin:1.0.8:test
 ```
 
 5.回到Intellij中，下断点，开始Debug
