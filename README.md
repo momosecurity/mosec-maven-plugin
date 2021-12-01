@@ -104,7 +104,7 @@ Maven >= 3.1
         </executions>
         <configuration>
             <endpoint>http://127.0.0.1:9000/api/plugin</endpoint>
-            <severityLevel>High</severityLevel>
+            <severity>High</severity>
             <onlyProvenance>true</onlyProvenance>
             <failOnVuln>true</failOnVuln>
         </configuration>
