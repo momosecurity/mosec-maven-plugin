@@ -15,8 +15,10 @@
  */
 package com.immomo.momosec.maven.plugins;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
@@ -93,6 +95,17 @@ public class ProjectDependencyCollector {
         DependencyNode node = collectResult.getRoot();
 
         this.tree = createJsonTree(node, null);
+        MavenProject parent = this.project.getParent();
+        if (parent == null) {
+            this.tree.add("parent", new JsonObject());
+        } else {
+            JsonObject jParent = new JsonObject();
+            jParent.addProperty("name", String.format("%s:%s", parent.getGroupId(), parent.getArtifactId()));
+            jParent.addProperty("version", parent.getVersion());
+            this.tree.add("parent", jParent);
+        }
+
+        tree.add("modules", (new Gson()).toJsonTree(this.project.getModules()).getAsJsonArray());
     }
 
     private JsonObject createJsonTree(DependencyNode depNode, JsonArray ancestors) {

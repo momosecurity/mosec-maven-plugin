@@ -1,0 +1,66 @@
+[
+  {
+    "version": "1.0.0",
+    "name": "com.immomo.momosec:ModuleProject",
+    "from": [
+      "com.immomo.momosec:ModuleProject@1.0.0"
+    ],
+    "dependencies": {},
+    "parent": {},
+    "modules": [
+      "moduleA",
+      "moduleB"
+    ]
+  },
+  {
+    "version": "1.0.0",
+    "name": "com.immomo.momosec:ModuleA",
+    "from": [
+      "com.immomo.momosec:ModuleA@1.0.0"
+    ],
+    "dependencies": {},
+    "parent": {
+      "name": "com.immomo.momosec:ModuleProject",
+      "version": "1.0.0"
+    },
+    "modules": [
+      "moduleSubA"
+    ]
+  },
+  {
+    "version": "1.0.0",
+    "name": "com.immomo.momosec:ModuleSubA",
+    "from": [
+      "com.immomo.momosec:ModuleSubA@1.0.0"
+    ],
+    "dependencies": {
+      "com.alibaba:fastjson": {
+        "version": "1.2.33",
+        "name": "com.alibaba:fastjson",
+        "from": [
+          "com.immomo.momosec:ModuleSubA@1.0.0",
+          "com.alibaba:fastjson@1.2.33"
+        ],
+        "dependencies": {}
+      }
+    },
+    "parent": {
+      "name": "com.immomo.momosec:ModuleA",
+      "version": "1.0.0"
+    },
+    "modules": []
+  },
+  {
+    "version": "1.0.0",
+    "name": "com.immomo.momosec:ModuleB",
+    "from": [
+      "com.immomo.momosec:ModuleB@1.0.0"
+    ],
+    "dependencies": {},
+    "parent": {
+      "name": "com.immomo.momosec:ModuleProject",
+      "version": "1.0.0"
+    },
+    "modules": []
+  }
+]

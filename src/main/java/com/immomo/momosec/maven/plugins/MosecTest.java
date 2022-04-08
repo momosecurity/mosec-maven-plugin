@@ -37,7 +37,10 @@ import org.eclipse.aether.repository.RemoteRepository;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import static com.immomo.momosec.maven.plugins.Renderer.writeToFile;
 
@@ -104,13 +107,16 @@ public class MosecTest extends AbstractMojo {
     @Parameter(property = "onlyAnalyze", defaultValue = "false")
     private Boolean onlyAnalyze;
 
+    private static List<JsonObject> collectTree = new ArrayList<>();
+    private static List<String> totalProjectsByGAV = null;
+
     public void execute() throws MojoFailureException {
         String env_endpoint = System.getenv(Constants.MOSEC_ENDPOINT_ENV);
         if (env_endpoint != null) {
             endpoint = env_endpoint;
         }
 
-        if (endpoint == null) {
+        if (Boolean.FALSE.equals(onlyAnalyze) && endpoint == null) {
             throw new MojoFailureException(Constants.ERROR_ON_NULL_ENDPOINT);
         }
 
@@ -142,20 +148,25 @@ public class MosecTest extends AbstractMojo {
             );
             collector.collectDependencies();
             JsonObject projectTree = collector.getTree();
+            String jsonDepTree = new GsonBuilder().setPrettyPrinting().create().toJson(projectTree);
+            getLog().debug(jsonDepTree);
+
+            collectTree.add(projectTree);
+            if (Boolean.TRUE.equals(onlyAnalyze)) {
+                if (this.isAnalyzeTotalFinished()
+                        && outputDepToFile != null
+                        && !"".equals(outputDepToFile)
+                ) {
+                    writeToFile(outputDepToFile, new GsonBuilder().setPrettyPrinting().create().toJson(collectTree));
+                }
+
+                getLog().info("onlyAnalyze mode, Done.");
+                return;
+            }
 
             projectTree.addProperty("type", Constants.BUILD_TOOL_TYPE);
             projectTree.addProperty("language", Constants.PROJECT_LANGUAGE);
             projectTree.addProperty("severityLevel", severityLevel);
-            String jsonDepTree = new GsonBuilder().setPrettyPrinting().create().toJson(projectTree);
-            getLog().debug(jsonDepTree);
-
-            if (Boolean.TRUE.equals(onlyAnalyze)) {
-                if (!"".equals(outputDepToFile) && outputDepToFile != null) {
-                    writeToFile(outputDepToFile, jsonDepTree);
-                }
-                getLog().info("onlyAnalyze mode, Done.");
-                return;
-            }
 
             HttpPost request = new HttpPost(endpoint);
             request.addHeader("content-type", Constants.CONTENT_TYPE_JSON);
@@ -177,9 +188,6 @@ public class MosecTest extends AbstractMojo {
             } catch (JsonParseException | IllegalStateException e) {
                 throw new NetworkErrorException(Constants.ERROR_ON_API);
             }
-            if (!"".equals(outputDepToFile) && outputDepToFile != null) {
-                writeToFile(outputDepToFile, jsonDepTree, responseJson);
-            }
             Renderer renderer = new Renderer(getLog(), failOnVuln);
             renderer.renderResponse(responseJson);
 
@@ -195,5 +203,29 @@ public class MosecTest extends AbstractMojo {
                 getLog().error(Constants.ERROR_RERUN_WITH_DEBUG);
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private boolean isAnalyzeTotalFinished() {
+        if (totalProjectsByGAV == null) {
+            Object key = repositorySystemSession.getWorkspaceReader().getRepository().getKey();
+            if (key instanceof HashSet) {
+                HashSet<String> gavs = (HashSet<String>) key;
+                totalProjectsByGAV = (List<String>) gavs.stream().collect(Collectors.toList());
+            } else {
+                return false;
+            }
+        }
+        List<String> analyzedProjectsByGAV = collectTree.stream()
+                .map(o -> String.format("%s:%s", o.get("name").getAsString(), o.get("version").getAsString()))
+                .collect(Collectors.toList());
+
+        if (totalProjectsByGAV == null
+                || analyzedProjectsByGAV == null
+                || totalProjectsByGAV.size() != analyzedProjectsByGAV.size()
+        ) {
+            return false;
+        }
+        return new TreeSet<String>(totalProjectsByGAV).equals(new TreeSet<String>(analyzedProjectsByGAV));
     }
 }
