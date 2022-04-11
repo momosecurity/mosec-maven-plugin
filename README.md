@@ -76,12 +76,13 @@ Maven >= 3.1
 
 > MOSEC_ENDPOINT=http://127.0.0.1:9000/api/plugin \
   mvn com.immomo.momosec:mosec-maven-plugin:1.0.7:test \
-  -DonlyProvenance=true
+  -DonlyProvenance=true \
+  -Dseverity=High
 
 // 或简化方式
 
 > MOSEC_ENDPOINT=http://127.0.0.1:9000/api/plugin \
-  mvn mosec:test -DonlyProvenance=true
+  mvn mosec:test -DonlyProvenance=true -Dseverity=High
 ```
 
 #### 项目中使用
@@ -104,7 +105,7 @@ Maven >= 3.1
         </executions>
         <configuration>
             <endpoint>http://127.0.0.1:9000/api/plugin</endpoint>
-            <severity>High</severity>
+            <severityLevel>High</severityLevel>
             <onlyProvenance>true</onlyProvenance>
             <failOnVuln>true</failOnVuln>
         </configuration>
