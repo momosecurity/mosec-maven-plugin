@@ -23,6 +23,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -110,7 +111,7 @@ public class MosecTest extends AbstractMojo {
     private static List<JsonObject> collectTree = new ArrayList<>();
     private static List<String> totalProjectsByGAV = null;
 
-    public void execute() throws MojoFailureException {
+    public void execute() throws MojoExecutionException, MojoFailureException {
         String env_endpoint = System.getenv(Constants.MOSEC_ENDPOINT_ENV);
         if (env_endpoint != null) {
             endpoint = env_endpoint;
@@ -151,7 +152,7 @@ public class MosecTest extends AbstractMojo {
             String jsonDepTree = new GsonBuilder().setPrettyPrinting().create().toJson(projectTree);
             getLog().debug(jsonDepTree);
 
-            collectTree.add(projectTree);
+            collectTree.add(projectTree.deepCopy());
             if (Boolean.TRUE.equals(onlyAnalyze)) {
                 if (this.isAnalyzeTotalFinished()
                         && outputDepToFile != null
@@ -185,14 +186,21 @@ public class MosecTest extends AbstractMojo {
             JsonObject responseJson;
             try {
                 responseJson = parser.parse(new BufferedReader(new InputStreamReader(response.getEntity().getContent()))).getAsJsonObject();
+                JsonObject lastTree = collectTree.get(collectTree.size() - 1);
+                lastTree.add("result", responseJson);
             } catch (JsonParseException | IllegalStateException e) {
                 throw new NetworkErrorException(Constants.ERROR_ON_API);
             }
+
+            if (outputDepToFile != null && !"".equals(outputDepToFile)) {
+                writeToFile(outputDepToFile, new GsonBuilder().setPrettyPrinting().create().toJson(collectTree));
+            }
+
             Renderer renderer = new Renderer(getLog(), failOnVuln);
             renderer.renderResponse(responseJson);
 
         } catch (DependencyCollectionException e) {
-            throw new MojoFailureException(e.getMessage());
+            throw new MojoFailureException(e.getMessage(), e.fillInStackTrace());
         } catch(MojoFailureException e) {
             throw e;
         } catch(Exception e) {
@@ -202,6 +210,7 @@ public class MosecTest extends AbstractMojo {
                 getLog().error(Constants.ERROR_GENERAL);
                 getLog().error(Constants.ERROR_RERUN_WITH_DEBUG);
             }
+            throw new MojoFailureException(e.getMessage(), e.fillInStackTrace());
         }
     }
 

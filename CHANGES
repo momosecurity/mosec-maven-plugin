@@ -2,6 +2,10 @@ Changelog
 
 =========
 
+Version 1.0.10
+
+- feature  Add "result" to dump file after inspect
+
 Version 1.0.9
 
 - feature  Add parent and modules fields to dump file

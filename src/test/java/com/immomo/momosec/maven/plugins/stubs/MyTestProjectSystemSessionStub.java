@@ -15,8 +15,11 @@
  */
 package com.immomo.momosec.maven.plugins.stubs;
 
+import org.apache.maven.model.Model;
+import org.apache.maven.repository.internal.MavenWorkspaceReader;
 import org.codehaus.plexus.PlexusTestCase;
 import org.eclipse.aether.*;
+import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.ArtifactType;
 import org.eclipse.aether.artifact.ArtifactTypeRegistry;
 import org.eclipse.aether.collection.*;
@@ -25,8 +28,12 @@ import org.eclipse.aether.repository.*;
 import org.eclipse.aether.resolution.ArtifactDescriptorPolicy;
 import org.eclipse.aether.resolution.ResolutionErrorPolicy;
 import org.eclipse.aether.transfer.TransferListener;
+import org.eclipse.aether.util.repository.ChainedWorkspaceReader;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 public class MyTestProjectSystemSessionStub implements RepositorySystemSession {
@@ -103,7 +110,29 @@ public class MyTestProjectSystemSessionStub implements RepositorySystemSession {
 
     @Override
     public WorkspaceReader getWorkspaceReader() {
-        return null;
+        return new MavenWorkspaceReader() {
+            @Override
+            public Model findModel(Artifact artifact) {
+                return null;
+            }
+
+            @Override
+            public WorkspaceRepository getRepository() {
+                return new WorkspaceRepository("mock", new HashSet<String>(){{
+                    add("com.immomo.momosec:MyTestProject:1.0.0");
+                }});
+            }
+
+            @Override
+            public File findArtifact(Artifact artifact) {
+                return null;
+            }
+
+            @Override
+            public List<String> findVersions(Artifact artifact) {
+                return null;
+            }
+        };
     }
 
     @Override

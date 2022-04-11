@@ -3,10 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.immomo.momosec</groupId>
-  <artifactId>VulnProject</artifactId>
+  <artifactId>MyTestProject</artifactId>
   <version>1.0.0</version>
 
-  <name>Mosec Maven Plugin Vuln Project</name>
+  <name>Mosec Maven Plugin Test Project</name>
 
 
   <dependencies>
@@ -14,6 +14,12 @@
       <groupId>com.alibaba</groupId>
       <artifactId>fastjson</artifactId>
       <version>1.2.33</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -32,7 +38,7 @@
           <remotePluginRepositories></remotePluginRepositories>
 
           <severityLevel>High</severityLevel>
-          <failOnVuln>False</failOnVuln>
+          <failOnVuln>True</failOnVuln>
           <onlyProvenance>true</onlyProvenance>
           <endpoint>https://fake.endpoint.com/</endpoint>
           <includeProvidedDependency>false</includeProvidedDependency>
