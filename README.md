@@ -145,7 +145,7 @@ mosec:test
       User property: onlyProvenance
 
     outputDepToFile (Default: )
-      输出依赖树到文件，使用-DonlyAnalyze参数下生效
+      输出依赖树到文件。设置-DonlyAnalyze=true仅输出依赖树，否则输出依赖树及漏洞检查结果
       User property: outputDepToFile
 
     severityLevel (Default: High)
